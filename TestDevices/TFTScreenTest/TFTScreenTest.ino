@@ -52,8 +52,6 @@ Serial.begin(9600);
   Tft.drawString("ABC",0,105,6,YELLOW);
   
   baseMillis = millis()/1000.0f;
-  xMax = Tft.height();
-  yMax = Tft.width();
   Serial.println(baseMillis);
   Serial.print("Screen resolution: "); Serial.print(xMax); Serial.print("x");Serial.println(yMax);
 }
