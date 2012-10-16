@@ -30,7 +30,7 @@
 // For better pressure precision, we need to know the resistance
 // between X+ and X- Use any multimeter to read it
 // The 2.8" TFT Touch shield has 300 ohms across the X plate
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 100);
+TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 Point lastPoint = Point(0, 0, 0);
 
 void setup(void) {
@@ -44,26 +44,25 @@ void loop(void) {
   // a point object holds x y and z coordinates
   Point p = ts.getPoint();
 
-  if (p.z > ts.pressureThreshhold) {
-     Serial.print("Raw X = "); Serial.print(p.x);
+  if (p.z > ts.pressureThreshhold) { // when the point is above pressureThreshhold
+     Serial.print("Raw X = "); Serial.print(p.x); // print info through Serial Port
      Serial.print("\tRaw Y = "); Serial.print(p.y);
      Serial.print("\tPressure = "); Serial.println(p.z);
   }
   
- 
   p.x = map(p.x, TS_MINX, TS_MAXX, 240, 0);
   p.y = map(p.y, TS_MINY, TS_MAXY, 320, 0);
   
   // we have some minimum pressure we consider 'valid'
   // pressure of 0 means no pressing!
-  if (p.z > ts.pressureThreshhold && p.x <= MAX_X && p.y <= MAX_Y) {
+  if (p.z > ts.pressureThreshhold) {
      Serial.print("X = "); Serial.print(p.x);
      Serial.print("\tY = "); Serial.print(p.y);
      Serial.print("\tPressure = "); Serial.println(p.z);
      
      Tft.fillCircle(p.x, p.y, 5, RED);
      if(lastPoint.x !=0 && lastPoint.y != 0) {
-       Tft.drawLine(lastPoint.x, lastPoint.y, p.x, p.y, 0x0FFFFFFF);
+       Tft.drawLine(lastPoint.x, lastPoint.y, p.x, p.y, WHITE);
      }
      lastPoint.x = p.x;
      lastPoint.y = p.y;
