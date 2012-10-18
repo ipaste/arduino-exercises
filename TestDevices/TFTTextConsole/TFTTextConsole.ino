@@ -1,36 +1,42 @@
 #include "TextConsole.h"
 #include "TFT.h"
 
-TextConsole *console = new TextConsole();
+
+TextConsole *console = new TextConsole(); // initialize the Text Console
 
 void setup() {
-  Tft.init();
+  Tft.init(); // initialize the Tft screen
   Serial.begin(9600);
 }
 
 
 void loop() {
-  
   char incomingByte;
   
   if (Serial.available() > 0) {   // something came across serial
-    while(1) {            // force into a loop until '\n' is received
+    while(1) { // force into a loop until '\n' is received
       incomingByte = Serial.read();
-//      if (incomingByte == '\n') break;   // exit the while(1), we're done receiving
-      if(incomingByte == '@')  {
+      if(incomingByte == '@')  { // move up a line
         console->moveUpOneLine();
-        console->moveCursorUpOneLine();
+        console->moveCursorUpOneLine(); // it's neccessary because the following '\n' 
+                                        // will move down a line
         continue;
       }
+      if(incomingByte == '`') { // clear the screen
+        console->reset();
+        console->moveCursorUpOneLine(); // it's neccessary because the following '\n' 
+                                        // will move down a line
+        continue;
+      }
+      
       if (incomingByte == -1) continue;  // if no characters are in the buffer read() returns -1   
       
       if(incomingByte != '\n') {
         console->writeByte(incomingByte);
       } else {
-        console->newLine(); 
+        console->newLine(); break; // break the while loop if the line from Serial ends
       }
     }
-    Serial.println("Refresh 1 time");
   }
 }
 
