@@ -366,7 +366,7 @@ void SeeedGrayOLED::drawGrayBitmap(unsigned char *bitmaparray,int bytes)
     for(int i=0;i<bytes;i++)
     {
         // directly send the binary data (4bit as a grayscale pixel unit)
-        char c = bitmaparray[i];
+        char c = pgm_read_byte(bitmaparray[i]);
         sendData(c);
     }
     if(localAddressMode == VERTICAL_MODE)
