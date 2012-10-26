@@ -58,6 +58,25 @@ public class BMPHelper {
 				println("");
 			}
 			
+			println("to 2 bit(4 color):");
+			char[][] bitmap4L = new char[height][width/4];
+			for(int i = 0; i < height; i++) {
+				for(int j = 0; j < width - 1; j+=4) {
+					char hh = (char) (grayScaleMap[i][j] / 64 << 6);
+					char hl = (char) (grayScaleMap[i][j + 1] / 64 << 4);
+					char lh = (char) (grayScaleMap[i][j + 2] / 64 << 2);
+					char ll = (char) (grayScaleMap[i][j + 3]/64);
+					char color = (char) (hh | hl | lh | ll);
+					System.out.print(String.format("0x%02x", (int)color));
+					if(j != width - 1)
+						System.out.print(", ");
+					
+					// set to the bitmap array
+					bitmap4L[i][j/4] = color;
+				}
+				println("");
+			}
+			
 			println("to specific array size(96x96):");
 			
 				
