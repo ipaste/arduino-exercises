@@ -255,7 +255,7 @@ void setup()
 //  delay(1000);
 //  
 //  SeeedGrayOled.clearDisplay();
-  SeeedGrayOled.drawGrayBitmap(sunset, 96*96/2);  
+//  SeeedGrayOled.drawGrayBitmap(sunset, 96*96/2);  
 //  
 //  delay(3000);
 }
