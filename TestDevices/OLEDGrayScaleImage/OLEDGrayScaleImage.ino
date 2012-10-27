@@ -284,6 +284,12 @@ void setup()
   SeeedGrayOled.drawGrayBitmapArea(32, 43, 16, 16, marioCoin16x16);
   SeeedGrayOled.drawGrayBitmapArea(70, 30, 16, 16, marioCoin16x16);
   SeeedGrayOled.drawGrayBitmapArea(50, 60, 16, 16, marioCoin16x16);
+//  SeeedGrayOled.drawBox(20,20,6,6,2);
+//  SeeedGrayOled.drawBox(15,65,6,6,4);
+//  SeeedGrayOled.drawBox(00,80,8,8,6);
+//  SeeedGrayOled.drawBox(73,21,8,8,8);
+//  SeeedGrayOled.drawBox(30,25,16,8,10);
+//  SeeedGrayOled.drawBox(30,55,12,12,12);
 }
 
 void loop()
@@ -315,15 +321,4 @@ void loop()
 //  i+=factor*3;
   
 }
-
-void grayLevel(int l) {
-  SeeedGrayOled.setGrayLevel(l);
-}
-
-void drawChar(int x, int y, char c) {
-  SeeedGrayOled.setTextXY(x, y);
-  SeeedGrayOled.putChar(c);
-}
-
-
 

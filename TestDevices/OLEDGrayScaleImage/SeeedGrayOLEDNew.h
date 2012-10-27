@@ -77,13 +77,14 @@ void setHorizontalMode();
 
 void setTextXY(unsigned char Row, unsigned char Column);
 void setXY(unsigned char X, unsigned char Y);
-void setFrame(unsigned char x, unsigned char y, unsigned h, unsigned w);
+void setFrame(unsigned char x, unsigned char y, unsigned h, unsigned w); // height and width must be even numbers
 void clearDisplay();
 void setContrastLevel(unsigned char ContrastLevel);
 void putChar(unsigned char c);
 void putString(const char *String);
 unsigned char putNumber(long n);
 
+void drawBox(unsigned char x, unsigned char y, unsigned char h, unsigned char w, unsigned char grayle);
 void drawBitmap(unsigned char *bitmaparray,int bytes);
 void drawGrayBitmap(unsigned char *bitmaparray, int bytes);
 void drawGrayBitmapArea(unsigned char x, unsigned char y, unsigned char h, unsigned char w, unsigned char *bitmaparray);

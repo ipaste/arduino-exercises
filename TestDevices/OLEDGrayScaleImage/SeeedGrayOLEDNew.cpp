@@ -351,6 +351,17 @@ unsigned char SeeedGrayOLED::putNumber(long long_num)
 
 }
 
+void SeeedGrayOLED::drawBox(unsigned char x, unsigned char y, unsigned char h, unsigned char w, unsigned char grayLevel)
+{
+  unsigned char pixelByte = ((grayLevel << 4) & 0xF0) |
+    (grayLevel & 0x0F);
+    
+  setFrame(x, y, h, w);
+  for(int i = 0; i < h*w/2; i ++) {
+    sendData(pixelByte);
+  }
+}
+
 void SeeedGrayOLED::drawBitmap(unsigned char *bitmaparray,int bytes)
 {
     char localAddressMode = addressingMode;
