@@ -227,6 +227,32 @@ void SeeedGrayOLED::setTextXY(unsigned char Row, unsigned char Column)
     sendCommand(0x07+(Row*8));     /* End Row*/
 }
 
+void SeeedGrayOLED::setXY(unsigned char x, unsigned char y)
+{
+    // Row Address
+    sendCommand(0x75); 	  // Set Row Address 
+    sendCommand(x); 	  // Start Point x
+    sendCommand(0x5f); 	  // End 95 
+    
+    // Column Address
+    sendCommand(0x15); 	  // Set Column Address 
+    sendCommand(0x08+y);  // Start Point y: Start from 8 for the IC
+    sendCommand(0x37); 	  // End at (8 + 47)th column. Each Column has 2 pixels(segments)
+}
+
+void SeeedGrayOLED::setFrame(unsigned char x, unsigned char y, unsigned h, unsigned w)
+{
+    // Row Address
+    sendCommand(0x75); 	  // Set Row Address 
+    sendCommand(x); 	  // Start Point x
+    sendCommand(x+h); 	  // End (x + height) 
+    
+    // Column Address
+    sendCommand(0x15); 	  // Set Column Address (the IC starts OLED 0 column at 0x08)
+    sendCommand(0x08+y/2);  // Start Point y
+    sendCommand(0x08+(y+w)/2-1);// End at ((y + width)/2, for two pixel at a byte, but why need minus 1??)
+}
+
 void SeeedGrayOLED::clearDisplay()
 {
     unsigned char i,j;
@@ -369,6 +395,27 @@ void SeeedGrayOLED::drawGrayBitmap(unsigned char *bitmaparray,int bytes)
         char c = pgm_read_byte(&bitmaparray[i]);
         sendData(c);
     }
+    if(localAddressMode == VERTICAL_MODE)
+    {
+        //If Vertical Mode was used earlier, restore it.
+        setVerticalMode();
+    }
+}
+
+void SeeedGrayOLED::drawGrayBitmapArea(unsigned char x, unsigned char y, unsigned char h, unsigned char w, unsigned char *bitmaparray)
+{
+    char localAddressMode = addressingMode;
+    if(addressingMode != HORIZONTAL_MODE)
+    {
+        //Bitmap is drawn in horizontal mode
+        setHorizontalMode();
+    }
+    setFrame(x, y, h, w);
+    
+    for(int i = 0; i < h*w/2; i++) {
+        sendData(pgm_read_byte(&bitmaparray[i]));
+    }
+    
     if(localAddressMode == VERTICAL_MODE)
     {
         //If Vertical Mode was used earlier, restore it.
