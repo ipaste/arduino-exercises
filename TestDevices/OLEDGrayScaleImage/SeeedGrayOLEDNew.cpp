@@ -207,12 +207,15 @@ void SeeedGrayOLED::setHorizontalMode()
     sendCommand(0x15); 	  // Set Column Address 
     sendCommand(0x08); 	  // Start from 8th Column of driver IC. This is 0th Column for OLED 
     sendCommand(0x37); 	  // End at  (8 + 47)th column. Each Column has 2 pixels(or segments)
+    
+    addressingMode = HORIZONTAL_MODE;
 }
 
 void SeeedGrayOLED::setVerticalMode()
 {
     sendCommand(0xA0); // remap to
     sendCommand(0x46); // Vertical mode
+    addressingMode = VERTICAL_MODE;
 }
 
 void SeeedGrayOLED::setTextXY(unsigned char Row, unsigned char Column)
