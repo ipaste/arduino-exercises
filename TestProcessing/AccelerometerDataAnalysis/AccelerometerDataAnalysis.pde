@@ -36,6 +36,8 @@ void draw() {
   drawLines(amYReads, 10, 200, yStats);
   drawLines(amZReads, 10, 400, zStats);
   printStats();
+  
+  save("amAnalysis.png");
 }
 
 void drawSectionSeparator() {
@@ -120,7 +122,7 @@ float squareDifference(int i, int j) {
 }
 
 void loadAMReads() {
-  lines = loadStrings("/home/tux/test_am_data.txt");
+  lines = loadStrings("test_am_data.txt");
   amXReads = new float[lines.length];
   amYReads = new float[lines.length];
   amZReads = new float[lines.length];
