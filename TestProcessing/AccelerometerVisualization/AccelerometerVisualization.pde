@@ -4,6 +4,14 @@ Serial myPort;
 int lf = 10; // linefeed
 int failCnt = 0;
 int successCnt = 0;
+PVector lastVector = null;
+float lastTime = 0;
+float SHOCK_Threshold = 8;
+boolean stepStart = false;
+int shockCount = 0;
+
+PGraphics pg2D;
+PGraphics pg3D;
 
 void setup() {
   setupTestGraphics();
@@ -19,23 +27,60 @@ void setupTestGraphics() {
   size(640, 480, P3D);
   lights();
   frameRate(12); 
-  camera(150,150,150, 0, 0, 0, 0, 0, -1);
 }
 
 void draw() {
   PVector v = readVectorFromSerial();
   if(v != null) {
+    hint(ENABLE_DEPTH_TEST); // enable 3D depth test to draw 3D model
+    
+    pushMatrix(); // need to push matrix before you set the camera
+    camera(150,150,150, 0, 0, 0, 0, 0, -1);
     background(0);
     drawAxisGrid();
     
-    pushMatrix();
+    pushMatrix();    
     translate(v.x, v.y, v.z);
     noStroke();
     box(10);
     popMatrix();
+    
     stroke(204, 102, 2);
     strokeWeight(5);
     line(0, 0, 0, v.x, v.y, v.z);
+    popMatrix();
+    
+    // display information about it
+    hint(DISABLE_DEPTH_TEST); // disable 3D depth test first
+    textMode(SCREEN);
+    if(lastVector == null) {
+      lastVector = v;
+      lastTime = millis();
+    } else {
+      float deltaX = v.x - lastVector.x;
+      float deltaY = v.y - lastVector.y;
+      float deltaZ = v.z - lastVector.z;
+      float deltaDistance = sqrt(deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ);
+      float now = millis();
+      if(deltaDistance > SHOCK_Threshold && stepStart == true) {
+        shockCount++;
+        stepStart = false;
+      } else if (deltaDistance > SHOCK_Threshold && stepStart == false) {
+        stepStart = true;
+      }
+        
+      // print on screen
+      line(0,0, 150, 150);
+      
+      text("Accelerometer: (" + v.x + ", " + v.y + ", " + v.z + ")", 20, 20);
+      text("Delta Value: " + deltaDistance, 20, 40);
+      text("Delta time: " + (now - lastTime) + "ms", 20, 60);
+      text("Step Start: " + stepStart, 20, 80);
+      text("Shock count: " + shockCount, 20, 100);
+      
+      lastVector = v;
+      lastTime = now;
+    }
   }
 }
 
@@ -64,7 +109,7 @@ PVector readVectorFromSerial() {
   if(bytes > 0) {
     String readString = myPort.readStringUntil(lf);
     try {
-      println("readString != null ? " + (readString != null));
+//      println("readString != null ? " + (readString != null));
       if(readString != null && readString.length() > 2) {
         String[] values = readString.substring(readString.indexOf("{") + 1, 
           readString.indexOf("}")).split(",");
