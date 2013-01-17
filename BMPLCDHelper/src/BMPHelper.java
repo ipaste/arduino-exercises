@@ -16,7 +16,7 @@ public class BMPHelper {
 	}
 
 	private static void testBmp() {
-		File f = new File("sunset.bmp");
+		File f = new File("test/epup_10.png");
 		try {
 			BufferedImage img = ImageIO.read(f);
 			int height = img.getHeight();
@@ -27,7 +27,7 @@ public class BMPHelper {
 			int[][] grayScaleMap = new int[height][width];
 			for(int i = 0; i < height; i++) {
 				for(int j = 0; j < width; j++) {
-					int pixel = img.getRGB(i,  j);
+					int pixel = img.getRGB(j, i);
 					int r = pixel & 0x00FF0000 >> 16;
 					int g = pixel & 0x0000FF00 >> 8;
 					int b = pixel & 0x000000FF;
@@ -76,6 +76,38 @@ public class BMPHelper {
 				}
 				println("");
 			}
+			
+			println("to 1 bit(2 color):");
+			char[][] bitmap2L = new char[height][width/8];
+			for(int i = 0; i < height; i++) {
+				for(int j = 0; j < width - 1; j+=8) {
+					char color = 0x00;
+					for(int k=0; k < 8; k++) {
+						if(grayScaleMap[i][j + k] > 0)
+							color |= (0x01 << (7-k));
+					}
+					System.out.print(String.format("0x%02x", (int)color));
+					if(j != width - 1)
+						System.out.print(", ");
+					
+					// set to the bitmap array
+					bitmap2L[i][j/8] = color;
+				}
+				println("");
+			}
+			// output for font(16px, 2bytes for one character)
+//			for(int i = 0; i < 12; i++) {
+//				System.out.print("{");
+//				for(int h = 0; h < 18; h++) {
+//					System.out.print(String.format("0x%02x, ", (int)bitmap2L[h][i*2]));
+//					System.out.print(String.format("0x%02x", (int)bitmap2L[h][i*2+1]));
+//					if(h != 17)
+//						System.out.print(", ");
+//				}
+//				println("}");
+//			}
+			
+			
 			
 			println("to specific array size(96x96):");
 			
